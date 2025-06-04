@@ -2,9 +2,9 @@ const fs = require('fs');
 // TODO: Require the http module
 const http = require('http');
 // Create a server
-const server = http.createServer((req, res) => {
+const server = http.createServer((request, response) => {
   // Create a url object with request url and host name
-  const url = new URL(request.url, 'http://${request.headers.host}');
+  const url = new URL(request.url, `http://${request.headers.host}`);
   // Create a switch statement based on pathname of url
   switch (url.pathname) {
     case '/': {
@@ -13,30 +13,31 @@ const server = http.createServer((req, res) => {
         // Get value of 'name' query
         const name = url.searchParams.get('name');
         console.log(name);
-        response.statusCode = 200;
         // Write response header
-        response.writeHead(200, {
-          JSON.stringify(['Content-Type': 'text/html']);
-        }
+        response.writeHead(200, { 'Content-Type': 'text/html' });
         // Pipe index.html to response
-        response.pipe('index.html');
+        fs.createReadStream('./index.html').pipe(response);
+        break;
+      } else if (request.method === 'POST'){
+        handlePostResponse(request, response);
+        break;
       }
-      break;
     }
-    default: 
+    default: {
+      // Write response header
+      response.writeHead(404, { 'Content-Type': 'text/html' });
+
+      break;
+      // Pipe 404.html to response
+      fs.createReadStream('404.html').pipe(responde);
+    }
   }
 });
 
-
-      // TODO: Check if request is POST and if so, run handlePostResponse()
-
-      // TODO: Write response header
-
-      // TODO: Pipe 404.html to response
-
-
-// TODO: Have server listen at port 4001
-
+// Have server listen at port 4001
+server.listen(4001, () => {
+  console.log(server.address().port);
+})
 
 // Function for handling POST responses
 function handlePostResponse(request, response){
