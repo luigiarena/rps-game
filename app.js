@@ -1,19 +1,31 @@
 const fs = require('fs');
 // TODO: Require the http module
-
-// TODO: Create a server
-
-  // TODO: Create a url object with request url and host name
-
-  // TODO: Create a switch statement based on pathname of url
-
-      // TODO: Check if request method is GET
-
-        // TODO: Get value of 'name' query
-
-        // TODO: Write response header
-
-        // TODO: Pipe index.html to response
+const http = require('http');
+// Create a server
+const server = http.createServer((req, res) => {
+  // Create a url object with request url and host name
+  const url = new URL(request.url, 'http://${request.headers.host}');
+  // Create a switch statement based on pathname of url
+  switch (url.pathname) {
+    case '/': {
+      // Check if request method is GET
+      if (request.method === 'GET') {
+        // Get value of 'name' query
+        const name = url.searchParams.get('name');
+        console.log(name);
+        response.statusCode = 200;
+        // Write response header
+        response.writeHead(200, {
+          JSON.stringify(['Content-Type': 'text/html']);
+        }
+        // Pipe index.html to response
+        response.pipe('index.html');
+      }
+      break;
+    }
+    default: 
+  }
+});
 
 
       // TODO: Check if request is POST and if so, run handlePostResponse()
